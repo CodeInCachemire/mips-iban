@@ -75,9 +75,9 @@ sb $t0, 22($t6)
 lb $t0, 5($t7)
 sb $t0, 23($t6)
 #addi $t3, $t3, 1
-sb $zero, 24($t6)   	
+	
 
-subi $sp,$sp,-12
+subi $sp,$sp,12
 sw $t6, 0($sp)
 sw $a0, 4($sp)
 move $a0,$t6
@@ -88,5 +88,6 @@ jal modulo_str
 lw $t6,0($sp)
 lw $a0,4($sp)
 lw $ra,8($sp)
+addi $sp,$sp,12
 	
 jr	$ra

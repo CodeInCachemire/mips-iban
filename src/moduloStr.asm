@@ -15,12 +15,12 @@ modulo_str:
 	addi $t1,$0,0 #counter
 	move $t5,$a2  #we move divisor to t5
 	
-	addi $t3, $t3, 0 #our result hold
+	li $t3, 0 #our result hold
 loop_modulo:
 	lb $t2, 0($t0) #load first character into t2
-	addi $t1, $t1, 1       # increment counter LOOP Counter
+	addi $t1, $t1, 1       # increment counter LOOP Counter				
     	addi $t0, $t0, 1  	#increment address
-    	
+    	sub $t2, $t2, 48 #ascii conversion
     	#here is modulo
     	mul $t3,$t3,10
     	addu $t3,$t3,$t2

@@ -1,0 +1,25 @@
+name: CI integration to run MIPS assembly tests on every push
+
+on:
+    push:
+        branches: [ main ]
+    pull_request:
+
+jobs:
+    test:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+            
+            - name : Set up Python
+              uses : actions/setup-python@v5
+              with :
+                    python-version : '3.11'
+            
+            - name: Run MIPS ASM test
+              run: python run_tests.py
+                
+
+         

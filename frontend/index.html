@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>IBAN ↔ KNR / BLZ Calculator</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+
+  <div class="container">
+    <h1>IBAN ↔ KNR / BLZ Calculator</h1>
+
+    <p class="intro">
+      This calculator converts between a given IBAN and its underlying
+      <strong>Konto­nummer (KNR)</strong> and <strong>Bankleitzahl (BLZ)</strong>.
+      <br /><br />
+      It supports both directions (but KNR + BLZ → IBAN only for German IBANs):
+    </p>
+
+    <ul class="intro-list">
+      <li><strong>IBAN → KNR + BLZ</strong></li>
+      <li><strong>KNR + BLZ → German IBAN</strong> (DE only)</li>
+    </ul>
+
+    <div class="mode-buttons">
+      <button id="btn-iban" class="active" onclick="selectMode('IBAN')">
+        IBAN → KNR + BLZ
+      </button>
+      <button id="btn-knrblz" onclick="selectMode('KNRBLZ')">
+        KNR + BLZ → IBAN
+      </button>
+    </div>
+
+    <div class="form">
+      <label for="value1" id="label-value1">IBAN</label>
+      <input id="value1" type="text" placeholder="DE02120300000000202051" />
+
+      <label for="value2" id="label-value2" class="disabled">
+        BLZ (8 digits, required for KNR + BLZ)
+      </label>
+      <input id="value2" type="text" placeholder="12030000" disabled />
+
+      <button class="run-btn" onclick="run()">Convert</button>
+    </div>
+
+    <div id="spinner" class="spinner hidden"></div>
+    <pre id="output"></pre>
+  </div>
+
+  <script src="/static/script.js"></script>
+</body>
+</html>

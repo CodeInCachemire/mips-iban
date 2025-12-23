@@ -21,6 +21,9 @@ function fetchWithTimeout(url, options, timeoutMs) {
   }).finally(() => clearTimeout(id));
 }
 
+
+
+
 function selectMode(newMode) {
   mode = newMode;
 
@@ -121,7 +124,7 @@ async function run() {
   output.textContent = "Running...";
 
   try {
-    const response = await fetch("http://127.0.0.1:8000/run", {
+    const response = await fetch("run", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"

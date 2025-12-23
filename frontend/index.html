@@ -7,45 +7,141 @@
 </head>
 <body>
 
-  <div class="container">
-    <h1>IBAN ↔ KNR / BLZ Calculator</h1>
+  <!-- ===== Top Bar ===== -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <h1>IBAN Converter</h1>
+      <span class="badge">CI VERIFIED</span>
+    </div>
+    <div class="topbar-right">
+      <span class="meta">MIPS ASSEMBLY • FastAPI • Docker</span>
+    </div>
+  </header>
 
-    <p class="intro">
-      This calculator converts between a given IBAN and its underlying
-      <strong>Konto­nummer (KNR)</strong> and <strong>Bankleitzahl (BLZ)</strong>.
-      <br /><br />
-      It supports both directions (but KNR + BLZ → IBAN only for German IBANs):
-    </p>
+  <!-- ===== Main Dashboard ===== -->
+  <main class="dashboard">
 
-    <ul class="intro-list">
-      <li><strong>IBAN → KNR + BLZ</strong></li>
-      <li><strong>KNR + BLZ → German IBAN</strong> (DE only)</li>
-    </ul>
+    <!-- LEFT COLUMN -->
+    <div class="left-column">
 
-    <div class="mode-buttons">
-      <button id="btn-iban" class="active" onclick="selectMode('IBAN')">
-        IBAN → KNR + BLZ
-      </button>
-      <button id="btn-knrblz" onclick="selectMode('KNRBLZ')">
-        KNR + BLZ → IBAN
-      </button>
+      <!-- Calculator Card -->
+      <section class="card calculator-card">
+        <h2>Convert Identifiers</h2>
+        <p class="card-subtitle">
+          Convert between IBAN and its underlying German banking identifiers.
+          You may use your german debit card for the KNR and BLZ values to get a valid IBAN, values are hidden in history section.
+        </p>
+
+        <div class="mode-buttons">
+          <button id="btn-iban" class="active" onclick="selectMode('IBAN')">
+            IBAN → KNR + BLZ
+          </button>
+          <button id="btn-knrblz" onclick="selectMode('KNRBLZ')">
+            KNR + BLZ → IBAN
+          </button>
+        </div>
+
+        <div class="form">
+          <label for="value1" id="label-value1">IBAN (22 digits)</label>
+          <input id="value1" type="text" placeholder="DE02120300000000202051" />
+
+          <label for="value2" id="label-value2" class="disabled">
+            BLZ (8 digits)
+          </label>
+          <input id="value2" type="text" placeholder="12030000" disabled />
+
+          <button class="run-btn" onclick="run()">Convert</button>
+        </div>
+
+        <div id="spinner" class="spinner hidden"></div>
+        <pre id="output"></pre>
+      </section>
+
+      <!-- CI Card -->
+      <section class="card ci-card">
+        <h2>Continuous Integration</h2>
+        <pre class="ci-log">
+        <span class="ci-test">test_iban_to_knr_blz</span> ... <span class="ci-pass">PASSED</span>
+        <span class="ci-test">test_knr_blz_to_iban</span> ... <span class="ci-pass">PASSED</span>
+        <span class="ci-test">test_invalid_iban</span> ... <span class="ci-pass">PASSED</span>
+        <span class="ci-test">test_invalid_knr_blz</span> ... <span class="ci-pass">PASSED</span>
+        <span class="ci-test">test_validateChecksum</span> ... <span class="ci-pass">PASSED</span>
+
+        <span class="ci-footer">✔ All tests passed via GitHub CI.</span>
+        </pre>
+      </section>
+
     </div>
 
-    <div class="form">
-      <label for="value1" id="label-value1">IBAN</label>
-      <input id="value1" type="text" placeholder="DE02120300000000202051" />
+    <!-- RIGHT COLUMN -->
+    <section class="card info-card">
+      <h2>About This Tool</h2>
 
-      <label for="value2" id="label-value2" class="disabled">
-        BLZ (8 digits, required for KNR + BLZ)
-      </label>
-      <input id="value2" type="text" placeholder="12030000" disabled />
+      <p class="about-lead">
+        A verified implementation of German IBAN conversion,
+        built on deterministic MIPS execution. Now extended and exposed via a modern web API.
+      </p>
 
-      <button class="run-btn" onclick="run()">Convert</button>
-    </div>
+      <div class="about-block">
+        <h3>Implementation</h3>
+        <ul class="impl-list">
+          <li>Initial MIPS assembly implementation</li>
+            <ul>
+              <li>Written in MIPS assembly language</li>
+              <li>Executed via MARS simulator</li>
+              <li>Verified via local test suite</li>
+            </ul>
+          <li>New extension</li>
+          <ul>
+            <li>FastAPI backend as a thin execution and validation layer</li>
+            <li>Dockerized environment for reproducible execution</li>
+            <li>Automated test suite executed in GitHub CI</li>
+          </ul>
+        </ul>
+      </div>
 
-    <div id="spinner" class="spinner hidden"></div>
-    <pre id="output"></pre>
-  </div>
+      <div class="about-block">
+        <h3>German IBAN format</h3>
+        <p>
+          An IBAN (International Bank Account Number) uniquely identifies a bank
+          account and embeds a checksum to detect input errors.
+        </p>
+
+        <pre class="iban-format">DE AA BBBBBBBB CCCCCCCCCC</pre>
+
+        <ul class="iban-parts">
+          <li><strong>DE</strong> — country code</li>
+          <li><strong>AA</strong> — checksum digits</li>
+          <li><strong>BBBBBBBB</strong> — BLZ (bank code)</li>
+          <li><strong>CCCCCCCCCC</strong> — KNR (account number)</li>
+        </ul>
+      </div>
+
+      <div class="about-block">
+        <h3>Conversion modes</h3>
+
+        <div class="mode-block">
+          <strong>IBAN → BLZ + KNR</strong>
+          <p>
+            Parses a German IBAN and extracts the embedded BLZ and KNR.
+            This mode performs structural validation only and does not
+            recompute the checksum.
+          </p>
+          <strong>iban2knr.asm computes this</strong>
+        </div>
+
+        <div class="mode-block">
+          <strong>BLZ + KNR → IBAN</strong>
+          <p>
+            Validates the inputs, computes the checksum using string-based
+            modulo arithmetic, and outputs a fully valid German IBAN.
+          </p>
+          <strong>knr2iban.asm, moduloStr.asm, validateChecksum.asm compute this</strong>
+        </div>
+      </div>
+    </section>
+
+  </main>
 
   <script src="/static/script.js"></script>
 </body>

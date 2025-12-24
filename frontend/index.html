@@ -7,55 +7,56 @@
 </head>
 <body>
 
-  <!-- ===== Top Bar ===== -->
+  <!--  Top Bar  -->
   <header class="topbar">
     <div class="topbar-left">
       <h1>IBAN Converter</h1>
       <span class="badge">CI VERIFIED</span>
     </div>
     <div class="topbar-right">
-      <span class="meta">MIPS ASSEMBLY • FastAPI • Docker</span>
+      <a href="/static/history.html" class="topbar-link">Conversion History</a>
+      <span class="meta">MIPS ASSEMBLY • FastAPI • Docker • Sqllite</span>
     </div>
   </header>
 
-  <!-- ===== Main Dashboard ===== -->
+  <!--  Main Dashboard  -->
   <main class="dashboard">
 
-    <!-- LEFT COLUMN -->
-    <div class="left-column">
+      <!-- LEFT COLUMN -->
+      <div class="left-column">
 
       <!-- Calculator Card -->
-      <section class="card calculator-card">
-        <h2>Convert Identifiers</h2>
-        <p class="card-subtitle">
-          Convert between IBAN and its underlying German banking identifiers.
-          You may use your german debit card for the KNR and BLZ values to get a valid IBAN, values are hidden in history section.
-        </p>
+        <section class="card calculator-card">
+          <h2>Convert Identifiers</h2>
+          <p class="card-subtitle">
+            Convert between IBAN and its underlying German banking identifiers.
+            You may use your german debit card for the KNR and BLZ values to get a valid IBAN, values are hidden in history section.
+          </p>
 
-        <div class="mode-buttons">
-          <button id="btn-iban" class="active" onclick="selectMode('IBAN')">
-            IBAN → KNR + BLZ
-          </button>
-          <button id="btn-knrblz" onclick="selectMode('KNRBLZ')">
-            KNR + BLZ → IBAN
-          </button>
-        </div>
+          <div class="mode-buttons">
+            <button id="btn-iban" class="active" onclick="selectMode('IBAN')">
+              IBAN → KNR + BLZ
+            </button>
+            <button id="btn-knrblz" onclick="selectMode('KNRBLZ')">
+              KNR + BLZ → IBAN
+            </button>
+          </div>
 
-        <div class="form">
-          <label for="value1" id="label-value1">IBAN (22 digits)</label>
-          <input id="value1" type="text" placeholder="DE02120300000000202051" />
+          <div class="form">
+            <label for="value1" id="label-value1">IBAN (22 digits)</label>
+            <input id="value1" type="text" placeholder="DE02120300000000202051" />
 
-          <label for="value2" id="label-value2" class="disabled">
-            BLZ (8 digits)
-          </label>
-          <input id="value2" type="text" placeholder="12030000" disabled />
+            <label for="value2" id="label-value2" class="disabled">
+              BLZ (8 digits)
+            </label>
+            <input id="value2" type="text" placeholder="12030000" disabled />
 
-          <button class="run-btn" onclick="run()">Convert</button>
-        </div>
+            <button class="run-btn" onclick="run()">Convert</button>
+          </div>
 
-        <div id="spinner" class="spinner hidden"></div>
-        <pre id="output"></pre>
-      </section>
+          <div id="spinner" class="spinner hidden"></div>
+          <pre id="output"></pre>
+        </section>
 
       <!-- CI Card -->
       <section class="card ci-card">
@@ -69,77 +70,77 @@
 
         <span class="ci-footer">✔ All tests passed via GitHub CI.</span>
         </pre>
-      </section>
+        </section>
 
-    </div>
-
-    <!-- RIGHT COLUMN -->
-    <section class="card info-card">
-      <h2>About This Tool</h2>
-
-      <p class="about-lead">
-        A verified implementation of German IBAN conversion,
-        built on deterministic MIPS execution. Now extended and exposed via a modern web API.
-      </p>
-
-      <div class="about-block">
-        <h3>Implementation</h3>
-        <ul class="impl-list">
-          <li>Initial MIPS assembly implementation</li>
-            <ul>
-              <li>Written in MIPS assembly language</li>
-              <li>Executed via MARS simulator</li>
-              <li>Verified via local test suite</li>
-            </ul>
-          <li>New extension</li>
-          <ul>
-            <li>FastAPI backend as a thin execution and validation layer</li>
-            <li>Dockerized environment for reproducible execution</li>
-            <li>Automated test suite executed in GitHub CI</li>
-          </ul>
-        </ul>
       </div>
 
-      <div class="about-block">
-        <h3>German IBAN format</h3>
-        <p>
-          An IBAN (International Bank Account Number) uniquely identifies a bank
-          account and embeds a checksum to detect input errors.
+      <!-- RIGHT COLUMN -->
+      <section class="card info-card">
+        <h2>About This Tool</h2>
+
+        <p class="about-lead">
+          A verified implementation of German IBAN conversion,
+          built on deterministic MIPS execution. Now extended and exposed via a modern web API.
         </p>
 
-        <pre class="iban-format">DE AA BBBBBBBB CCCCCCCCCC</pre>
-
-        <ul class="iban-parts">
-          <li><strong>DE</strong> — country code</li>
-          <li><strong>AA</strong> — checksum digits</li>
-          <li><strong>BBBBBBBB</strong> — BLZ (bank code)</li>
-          <li><strong>CCCCCCCCCC</strong> — KNR (account number)</li>
-        </ul>
-      </div>
-
-      <div class="about-block">
-        <h3>Conversion modes</h3>
-
-        <div class="mode-block">
-          <strong>IBAN → BLZ + KNR</strong>
-          <p>
-            Parses a German IBAN and extracts the embedded BLZ and KNR.
-            This mode performs structural validation only and does not
-            recompute the checksum.
-          </p>
-          <strong>iban2knr.asm computes this</strong>
+        <div class="about-block">
+          <h3>Implementation</h3>
+          <ul class="impl-list">
+            <li>Initial MIPS assembly implementation</li>
+              <ul>
+                <li>Written in MIPS assembly language</li>
+                <li>Executed via MARS simulator</li>
+                <li>Verified via local test suite</li>
+              </ul>
+            <li>Extension Phase 1</li>
+            <ul>
+              <li>FastAPI backend as a thin execution and validation layer</li>
+              <li>Dockerized MIPS environment for reproducible execution</li>
+              <li>Automated test suite executed in GitHub CI</li>
+            </ul>
+          </ul>
         </div>
 
-        <div class="mode-block">
-          <strong>BLZ + KNR → IBAN</strong>
+        <div class="about-block">
+          <h3>German IBAN format</h3>
           <p>
-            Validates the inputs, computes the checksum using string-based
-            modulo arithmetic, and outputs a fully valid German IBAN.
+            An IBAN (International Bank Account Number) uniquely identifies a bank
+            account and embeds a checksum to detect input errors.
           </p>
-          <strong>knr2iban.asm, moduloStr.asm, validateChecksum.asm compute this</strong>
+
+          <pre class="iban-format">DE AA BBBBBBBB CCCCCCCCCC</pre>
+
+          <ul class="iban-parts">
+            <li><strong>DE</strong> — country code</li>
+            <li><strong>AA</strong> — checksum digits</li>
+            <li><strong>BBBBBBBB</strong> — BLZ (bank code)</li>
+            <li><strong>CCCCCCCCCC</strong> — KNR (account number)</li>
+          </ul>
         </div>
-      </div>
-    </section>
+
+        <div class="about-block">
+          <h3>Conversion modes</h3>
+
+          <div class="mode-block">
+            <strong>IBAN → BLZ + KNR</strong>
+            <p>
+              Parses a German IBAN and extracts the embedded BLZ and KNR.
+              This mode performs structural validation only and does not
+              recompute the checksum.
+            </p>
+            <strong>iban2knr.asm computes this</strong>
+          </div>
+
+          <div class="mode-block">
+            <strong>BLZ + KNR → IBAN</strong>
+            <p>
+              Validates the inputs, computes the checksum using string-based
+              modulo arithmetic, and outputs a fully valid German IBAN.
+            </p>
+            <strong>knr2iban.asm, moduloStr.asm, validateChecksum.asm compute this</strong>
+          </div>
+        </div>
+      </section>
 
   </main>
 

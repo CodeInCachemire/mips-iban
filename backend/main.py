@@ -1,14 +1,44 @@
+from contextlib import asynccontextmanager
+import json
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
+from backend import db
+
 
 import subprocess
 
-app = FastAPI()
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    db.init_db()
+    yield
+app = FastAPI(lifespan=lifespan)
+
 
 app.mount("/static", StaticFiles(directory="frontend"), name="static")
+
+@app.get("/history")
+def read_history():
+    rows = db.read_conversion()
+    data = []
+    for row in rows:
+        entry = {
+            "id" : row[0],
+            "direction" : row[1],
+            "input" : json.loads(row[2]),
+            "output" : json.loads(row[3]),
+            "created_at": row[4],
+        }
+        data.append(entry)
+    return data
+
+def mask_number(s:str, mask_char="*"):
+    return s[:2] + mask_char * (len(s) - 5) + s[-3:]
+def mask_iban(s:str, mask_char="*"):
+    return s[:6] + mask_char * (len(s) - 9) + s[-3:]
 
 @app.get("/")
 def serve_frontend():
@@ -44,9 +74,12 @@ class Request(BaseModel):
 @app.post("/run")
 def run(req: Request):
     mode = req.mode.upper()
+    input_dict = {}
 
     if mode == "IBAN":
         input_text = f"IBAN\n{req.value1}\n"
+        masked_input = mask_iban(req.value1)
+        input_dict = {"IBAN":masked_input}
 
     elif mode == "KNRBLZ":
         if req.value2 is None:
@@ -55,6 +88,9 @@ def run(req: Request):
                 detail="value2 (BLZ) required for KNRBLZ mode"
             )
         input_text = f"KNRBLZ\n{req.value1}\n{req.value2}\n"
+        masked_KNR = mask_number(req.value1)
+        masked_BLZ = mask_number(req.value2)
+        input_dict = {"KNR":masked_KNR, "BLZ" :masked_BLZ}
 
     else:
         raise HTTPException(
@@ -113,9 +149,14 @@ def run(req: Request):
         raise HTTPException(status_code=400, detail=message)
 
     resultnew = {}
+    output_masked = {}
     for i in lines:
         if "=" in i:
             k , v = i.split("=",1)
             if ((k == "BLZ" or k == "KNR") and mode == "IBAN") or (k == "IBAN" and mode == "KNRBLZ"):
-                resultnew[k] = v           
+                resultnew[k] = v
+                output_masked[k] = mask_number(v)
+
+    db.log_conversion(mode, json.dumps(input_dict), json.dumps(output_masked))      
     return resultnew
+

@@ -124,7 +124,7 @@ async function run() {
   output.textContent = "Running...";
 
   try {
-    const response = await fetch("run", {
+    const response = await fetch("/run", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -140,6 +140,9 @@ async function run() {
     }
 
     output.textContent = JSON.stringify(data, null, 2);
+    if (typeof loadHistory === "function") {
+    loadHistory();
+}
   } catch (err) {
     output.textContent = "Network error: backend not reachable";
   }

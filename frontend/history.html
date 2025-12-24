@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Conversion History</title>
+  <link rel="stylesheet" href="/static/style.css" />
+</head>
+<body>
+
+  <!-- TOP BAR  -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <h1>IBAN Converter</h1>
+      <span class="badge">CI VERIFIED</span>
+    </div>
+    <div class="topbar-right">
+      <a href="/static/index.html" class="topbar-link">← Back</a>
+    </div>
+  </header>
+
+  <main class="history-page">
+    <section class="history-card">
+      <h2>Conversion History - Recent 20 conversions</h2>
+
+      <table class="history-table">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Mode</th>
+            <th>Input</th>
+            <th>Output</th>
+            <th>Time</th>
+          </tr>
+        </thead>
+        <tbody id="history-list"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <script src="/static/history.js"></script>
+</body>
+</html>

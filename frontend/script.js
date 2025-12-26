@@ -120,17 +120,17 @@ async function run() {
   if (mode === "KNRBLZ") {
     body.value2 = value2;
   }
-
+  setLoading(true)
   output.textContent = "Running...";
 
   try {
-    const response = await fetch("/run", {
+    const response = await fetchWithTimeout("/run", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
       },
       body: JSON.stringify(body)
-    });
+    },8000);
 
     const data = await response.json();
 
@@ -141,9 +141,11 @@ async function run() {
 
     output.textContent = JSON.stringify(data, null, 2);
     if (typeof loadHistory === "function") {
-    loadHistory();
-}
+      loadHistory();
+    }
   } catch (err) {
     output.textContent = "Network error: backend not reachable";
+  } finally {
+    setLoading(false)
   }
 }

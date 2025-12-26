@@ -19,14 +19,12 @@ zzstr:
 	.asciiz "00"
 emptystr:
 	.asciiz ""
-# Meldungen
-checksumok_msg:
-        .asciiz "Valid checksum!"
-checksum_errmsg:
-        .asciiz "Invalid checksum!"
-deprefix_errmsg:
-        .asciiz "No german IBAN prefix!"
-  
+msg_checksum_ok:
+    .asciiz "MSG=Valid checksum! This is a valid IBAN!\n"
+msg_checksum_bad:
+    .asciiz "MSG=Invalid checksum, this is not a valid IBAN!\n"
+msg_prefix_bad:
+    .asciiz "MSG=No german IBAN prefix!\n"
 # local character buffers
 # we allocate one additional byte for the null terminator
 knrbuf:
@@ -47,7 +45,6 @@ errstr:
     .asciiz "ERR\n"
 msg_invalid:
     .asciiz "MSG=Invalid input\n"
-
 blz_key:
     .asciiz "BLZ="
 knr_key:
@@ -58,7 +55,7 @@ iban_key:
 # wait for input
 main:
     lw  $t0 HEADLESS
-    beq $t0 $zero interactive_mode
+    beq $t0 $zero interactive_mode #mars simulator mode
     j   headless_mode
 
 interactive_mode:
@@ -167,9 +164,22 @@ check_IBAN2:
     bne $t4 $t8 headless_error
 
     # read IBAN
-    la  $a0 ibanbuf
-    li  $a1 22
+    la $a0 ibanbuf
+    li $a1 22
     jal readbuf
+
+    #iban verification
+    la $a0 ibanbuf
+    jal verify_iban
+
+	li  $t0 1
+    beq $v0 $t0 headless_prefix_error
+    li  $t0 2
+    beq $v0 $t0 headless_checksum_error
+    la  $a0 okstr
+    jal print
+	la	$a0 msg_checksum_ok
+	jal	print
 
     # call iban2knr
     la  $a0 ibanbuf
@@ -177,10 +187,7 @@ check_IBAN2:
     la  $a2 knrbuf
     jal iban2knr
 
-    # print result
-    la  $a0 okstr
-    jal print
-
+    #print blz and knr
     la  $a0 blz_key
     jal print
     la  $a0 blzbuf
@@ -246,5 +253,19 @@ headless_error:
     la  $a0 errstr
     jal print
     la  $a0 msg_invalid
+    jal print
+    j end
+
+headless_prefix_error:
+    la  $a0 errstr
+    jal print
+    la  $a0 msg_prefix_bad
+    jal print
+    j end
+
+headless_checksum_error:
+    la  $a0 errstr
+    jal print
+    la  $a0 msg_checksum_bad
     jal print
     j end

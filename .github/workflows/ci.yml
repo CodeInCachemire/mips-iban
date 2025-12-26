@@ -1,25 +1,41 @@
-name: CI integration to run MIPS assembly tests on every push
+name: CI integration to run MIPS and Python tests on every push
 
 on:
-    push:
-        branches: [ main ]
-    pull_request:
+  push:
+    branches: [ main ]
+  pull_request:
 
 jobs:
-    test:
-        runs-on: ubuntu-latest
+  test:
+    runs-on: ubuntu-latest
 
-        steps:
-            - name: Checkout repository
-              uses: actions/checkout@v4
-            
-            - name : Set up Python
-              uses : actions/setup-python@v5
-              with :
-                    python-version : '3.11'
-            
-            - name: Run MIPS ASM test
-              run: python run_tests.py
-                
+    steps:
 
-         
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+
+      - name: Run MIPS ASM tests
+        run: python run_tests.py
+
+
+      - name: Run pytest tests
+        run: python -m pytest -v

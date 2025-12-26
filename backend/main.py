@@ -1,5 +1,6 @@
 from contextlib import asynccontextmanager
 import json
+import os
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
@@ -45,12 +46,17 @@ def serve_frontend():
     # Correct relative path inside Docker (/app/static/index.html)
     return FileResponse("frontend/index.html")
 
+ALLOWED_ORIGINS = os.getenv(
+    "ALLOWED_ORIGINS",
+    "http://localhost:8000,http://127.0.0.1:8000"
+).split(",")
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=ALLOWED_ORIGINS,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["POST", "GET"],
+    allow_headers=["Content-Type"],
 )
 
 class Request(BaseModel):
@@ -77,8 +83,8 @@ def run(req: Request):
     input_dict = {}
 
     if mode == "IBAN":
-        input_text = f"IBAN\n{req.value1}\n"
-        masked_input = mask_iban(req.value1)
+        input_text = f"IBAN\n{req.value1.upper()}\n"
+        masked_input = mask_iban(req.value1.upper())
         input_dict = {"IBAN":masked_input}
 
     elif mode == "KNRBLZ":
@@ -108,6 +114,7 @@ def run(req: Request):
         "/app/src/iban2knr.asm",
         "/app/src/knr2iban.asm",
         "/app/src/moduloStr.asm",
+        "/app/src/verify_iban.asm",
         "/app/src/util.asm",
         "/app/src/validateChecksum.asm",
         "/app/src/main.asm",
@@ -151,12 +158,16 @@ def run(req: Request):
     resultnew = {}
     output_masked = {}
     for i in lines:
-        if "=" in i:
+        if i.startswith("MSG="):
+            status_msg = i.split("=", 1)[1]
+        elif "=" in i:
             k , v = i.split("=",1)
             if ((k == "BLZ" or k == "KNR") and mode == "IBAN") or (k == "IBAN" and mode == "KNRBLZ"):
                 resultnew[k] = v
                 output_masked[k] = mask_number(v)
-
-    db.log_conversion(mode, json.dumps(input_dict), json.dumps(output_masked))      
-    return resultnew
+    if mode =="KNRBLZ":
+        status_msg = "Successful KNR and BLZ parsed and valid IBAN generated!"
+    response_new = {"status_msg" : status_msg, "result" : resultnew}
+    db.log_conversion(mode, json.dumps(input_dict), json.dumps(output_masked))  
+    return response_new
 

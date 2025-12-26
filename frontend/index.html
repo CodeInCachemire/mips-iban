@@ -10,12 +10,12 @@
   <!--  Top Bar  -->
   <header class="topbar">
     <div class="topbar-left">
-      <h1>IBAN Converter</h1>
+      <h1>MIPS Assembly German IBAN Validator & Generator</h1>
       <span class="badge">CI VERIFIED</span>
     </div>
     <div class="topbar-right">
-      <a href="/static/history.html" class="topbar-link">Conversion History</a>
-      <span class="meta">MIPS ASSEMBLY • FastAPI • Docker • Sqllite</span>
+      <a href="/static/history.html" class="topbar-link history-link">Conversion History</a>
+      <span class="meta">MIPS ASSEMBLY • FastAPI • Docker • SQLite • AWS</span>
     </div>
   </header>
 
@@ -27,10 +27,10 @@
 
       <!-- Calculator Card -->
         <section class="card calculator-card">
-          <h2>Convert Identifiers</h2>
+          <h2>Choose between Validator or Generator mode!</h2>
           <p class="card-subtitle">
-            Convert between IBAN and its underlying German banking identifiers.
-            You may use your german debit card for the KNR and BLZ values to get a valid IBAN, values are hidden in history section.
+            Convert between a valid german IBAN and its underlying German banking identifiers BLZ and KNR. 
+            You may use your german debit card for the KNR and BLZ values to get a valid IBAN, sensitive identifiers are masked before persistence for the converion history database.
           </p>
 
           <div class="mode-buttons">
@@ -68,7 +68,8 @@
         <span class="ci-test">test_invalid_knr_blz</span> ... <span class="ci-pass">PASSED</span>
         <span class="ci-test">test_validateChecksum</span> ... <span class="ci-pass">PASSED</span>
 
-        <span class="ci-footer">✔ All tests passed via GitHub CI.</span>
+        <span class="ci-footer">✔ All MIPS tests passed via GitHub CI.</span>
+        <span class="ci-footer">✔ All Python pytest front and backend tests passed via GitHub CI.</span>
         </pre>
         </section>
 
@@ -79,24 +80,30 @@
         <h2>About This Tool</h2>
 
         <p class="about-lead">
-          A verified implementation of German IBAN conversion,
+          A verified implementation of a German IBAN validator and generator,
           built on deterministic MIPS execution. Now extended and exposed via a modern web API.
         </p>
 
         <div class="about-block">
           <h3>Implementation</h3>
           <ul class="impl-list">
-            <li>Initial MIPS assembly implementation</li>
+            <li>Initial MIPS assembly implementation 2023</li>
               <ul>
                 <li>Written in MIPS assembly language</li>
                 <li>Executed via MARS simulator</li>
                 <li>Verified via local test suite</li>
               </ul>
-            <li>Extension Phase 1</li>
+            <li>Extension Phase 1 2025</li>
             <ul>
               <li>FastAPI backend as a thin execution and validation layer</li>
               <li>Dockerized MIPS environment for reproducible execution</li>
               <li>Automated test suite executed in GitHub CI</li>
+            </ul>
+            <li>Extension Phase 2 2025</li>
+            <ul>
+              <li>Implemented IBAN validation in IBAN to KNRBLZ mode</li>
+              <li>Implemented persistent conversion history backed by SQLite</li>
+              <li>Deployed to AWS</li>
             </ul>
           </ul>
         </div>
@@ -124,11 +131,10 @@
           <div class="mode-block">
             <strong>IBAN → BLZ + KNR</strong>
             <p>
-              Parses a German IBAN and extracts the embedded BLZ and KNR.
-              This mode performs structural validation only and does not
-              recompute the checksum.
+              Parses a German IBAN, validates it via verify_iban and then extracts the embedded BLZ and KNR.
+              It uses the validate_checksum
             </p>
-            <strong>iban2knr.asm computes this</strong>
+            <strong>very_iban, validate_checksum, iban2knr.asm computes this</strong>
           </div>
 
           <div class="mode-block">

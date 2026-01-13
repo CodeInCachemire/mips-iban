@@ -48,7 +48,7 @@ ctx = execjs.compile(js_code)
 
 #IBAN TESTS
 
-def test_valid_iban():
+def test_valid_iban_uppercase():
     ok, msg = ctx.call(
         "runValidation",
         "IBAN",
@@ -58,8 +58,8 @@ def test_valid_iban():
     assert ok is True
     assert msg == ""
 
-#mips does this test by itself so js should not
-def test_valid_iban():
+#mips does this test by itself so js should not reject
+def test_valid_iban_lowercase():
     ok, msg = ctx.call(
         "runValidation",
         "IBAN",

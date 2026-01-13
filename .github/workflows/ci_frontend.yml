@@ -1,4 +1,4 @@
-name: CI integration to run MIPS python tests on every push
+name: CI for frontend tests.
 
 on:
   push:
@@ -32,6 +32,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
 
+      - name: Run frontend tests
+        run: python -m pytest test_frontend.py -v
 
-      - name: Run MIPS ASM tests
-        run: python run_tests.py

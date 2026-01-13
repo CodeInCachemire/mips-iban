@@ -63,17 +63,17 @@ class Request(BaseModel):
     mode: str = Field(
         ...,
         description="Operation mode: 'IBAN' or 'KNRBLZ'",
-        example="IBAN",
+        json_schema_extra={"example": "IBAN"},
     )
     value1: str = Field(
         ...,
         description="IBAN or KNR depending on mode",
-        example="DE02120300000000202051",
+        json_schema_extra={"example": "DE02120300000000202051"},
     )
     value2: str | None = Field(
         None,
         description="BLZ value (required only for KNRBLZ mode)",
-        example="12030000",
+        json_schema_extra={"example": "12030000"},
     )
 
 

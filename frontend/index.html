@@ -14,8 +14,8 @@
       <span class="badge">CI VERIFIED</span>
     </div>
     <div class="topbar-right">
-      <a href="/static/history.html" class="topbar-link history-link">Conversion History</a>
-      <span class="meta">MIPS ASSEMBLY • FastAPI • Docker • SQLite • AWS</span>
+      <a href="/static/history.html" class="topbar-link history-link" style="font-size: 18px; font-weight: 600; text-decoration: underline;">Conversion History</a>
+      <span class="meta" style="font-size: 18px;">MIPS Assembly • FastAPI • Docker • SQLite • AWS</span>
     </div>
   </header>
 
@@ -28,10 +28,9 @@
       <!-- Calculator Card -->
         <section class="card calculator-card">
           <h2>Choose between Validator or Generator mode!</h2>
-          <p class="card-subtitle">
-            Convert between a valid german IBAN and its underlying German banking identifiers BLZ and KNR. 
-            You may use your german debit card for the KNR and BLZ values to get a valid IBAN, sensitive identifiers are masked before persistence for the converion history database.
-          </p>
+          <p class="card-subtitle">Convert between a valid german IBAN and its underlying German banking identifiers BLZ and KNR.</p>
+          <p class="card-subtitle">You may use your german debit card for the KNR and BLZ values to get a valid IBAN.</p>
+          <p class="card-subtitle">Sensitive identifiers are masked before persistence for the conversion history database.</p>
 
           <div class="mode-buttons">
             <button id="btn-iban" class="active" onclick="selectMode('IBAN')">
@@ -101,7 +100,7 @@
             </ul>
             <li>Extension Phase 2 2025</li>
             <ul>
-              <li>Implemented IBAN validation in IBAN to KNRBLZ mode</li>
+              <li>MIPS core IBAN extended, validation in IBAN to KNRBLZ mode</li>
               <li>Implemented persistent conversion history backed by SQLite</li>
               <li>Deployed to AWS</li>
             </ul>

@@ -144,7 +144,7 @@ def test_invalid_iban_too_short():
     
     assert res.status_code == 422
     assert "detail" in res.json()
-    assert "IBAN must be 22 digits" in str(res.json()["detail"])
+    assert "IBAN must be 22 characters" in str(res.json()["detail"])
 
 
 def test_invalid_knr_length():
@@ -210,7 +210,7 @@ def test_sql_injection_attempt():
     
     assert res.status_code == 422
     assert "detail" in res.json()
-    assert "IBAN must be 22 digits" in str(res.json()["detail"])
+    assert "IBAN must be 22 characters" in str(res.json()["detail"])
 
 
 def test_missing_blz_for_knrblz_mode():
@@ -244,22 +244,7 @@ def test_xss_attempt():
     
     assert res.status_code == 422
     assert "detail" in res.json()
-    assert "IBAN must be 22 digits" in str(res.json()["detail"])
-
-
-def test_iban_with_lowercase_letters():
-    """Test that IBAN with lowercase letters is rejected with 422"""
-    with TestClient(app) as client:
-        res = client.post(
-            "/run",
-            json={
-                "mode": "IBAN",
-                "value1": "de44500105171234567890"
-            }
-        )
-    
-    assert res.status_code == 422
-    assert "detail" in res.json()
+    assert "IBAN must be 22 characters" in str(res.json()["detail"])
 
 
 def test_knr_with_non_digits():

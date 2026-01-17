@@ -135,7 +135,17 @@ async function run() {
     const data = await response.json();
 
     if (!response.ok) {
-      output.textContent = "Error:\n" + data.detail;
+      // Handle different error response formats
+      if (Array.isArray(data.detail)) {
+        // Pydantic validation errors (422) - detail is an array
+        const errors = data.detail.map(err => err.msg).join('\n');
+        output.textContent = "Validation Error:\n" + errors;
+      } else if (typeof data.detail === 'string') {
+        // Standard HTTP errors (400, 500) - detail is a string
+        output.textContent = "Error: " + data.detail;
+      } else {
+        output.textContent = "Error: " + JSON.stringify(data);
+      }
       return;
     }
 

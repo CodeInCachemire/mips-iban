@@ -14,8 +14,8 @@
       <span class="badge">CI VERIFIED</span>
     </div>
     <div class="topbar-right">
-      <a href="/static/history.html" class="topbar-link history-link" style="font-size: 18px; font-weight: 600; text-decoration: underline;">Conversion History</a>
-      <span class="meta" style="font-size: 18px;">MIPS Assembly • FastAPI • Docker • SQLite • AWS</span>
+      <a href="/static/history.html" class="topbar-link history-link" style="font-size: 16px; font-weight: 500; text-decoration: underline;">Conversion History</a>
+      <span class="meta" style="font-size: 16px;">MIPS Assembly • FastAPI • Docker • SQLite • AWS</span>
     </div>
   </header>
 
@@ -68,7 +68,8 @@
         <span class="ci-test">test_validateChecksum</span> ... <span class="ci-pass">PASSED</span>
 
         <span class="ci-footer">✔ All MIPS tests passed via GitHub CI.</span>
-        <span class="ci-footer">✔ All Python pytest front and backend tests passed via GitHub CI.</span>
+        <span class="ci-footer">✔ All Python frontend tests passed via GitHub CI.</span>
+        <span class="ci-footer">✔ All Python backend tests passed via GitHub CI.</span>
         </pre>
         </section>
 
@@ -102,6 +103,7 @@
             <ul>
               <li>MIPS core IBAN extended, validation in IBAN to KNRBLZ mode</li>
               <li>Implemented persistent conversion history backed by SQLite</li>
+              <li>Added structured logging alongside backend input validation</li>
               <li>Deployed to AWS</li>
             </ul>
           </ul>
@@ -128,21 +130,21 @@
           <h3>Conversion modes</h3>
 
           <div class="mode-block">
-            <strong>IBAN → BLZ + KNR</strong>
+            <strong>Validator Mode: IBAN → KNR + BLZ</strong>
             <p>
               Parses a German IBAN, validates it via verify_iban and then extracts the embedded BLZ and KNR.
-              It uses the validate_checksum
+              It uses validate_checksum.
             </p>
-            <strong>very_iban, validate_checksum, iban2knr.asm computes this</strong>
+            <strong>verify_iban, validate_checksum, iban2knr.asm</strong>
           </div>
 
           <div class="mode-block">
-            <strong>BLZ + KNR → IBAN</strong>
+            <strong>Generator Mode: KNR + BLZ → IBAN</strong>
             <p>
               Validates the inputs, computes the checksum using string-based
               modulo arithmetic, and outputs a fully valid German IBAN.
             </p>
-            <strong>knr2iban.asm, moduloStr.asm, validateChecksum.asm compute this</strong>
+            <strong>knr2iban.asm, moduloStr.asm, validateChecksum.asm</strong>
           </div>
         </div>
       </section>
